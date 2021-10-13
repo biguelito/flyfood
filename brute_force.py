@@ -1,5 +1,3 @@
-from math import hypot, sqrt
-
 class BruteForce:
     def get_distances(self, file):
         """
