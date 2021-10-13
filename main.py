@@ -3,13 +3,13 @@ from brute_force import BruteForce as BF
 
 def forca_bruta(grafo):
     bf = BF()
-    distance_dict = bf.getDistances(grafo)
+    distance_dict = bf.get_distances(grafo)
     
     for k, v in distance_dict.items():
         print(k, ' = ', v)
     print('')
 
-    short_path, short_cost = bf.shortestpath(distance_dict)
+    short_path, short_cost = bf.shortest_path(distance_dict)
     print(short_path, short_cost)
 
     return
