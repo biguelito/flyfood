@@ -4,7 +4,7 @@ class GeneticAlgoritm:
     def __init__(self, distances):
         self.distances = distances
         self.genes = list(self.distances.keys())
-        self.chromossome_size = len(self.genes)-1
+        self.chromossome_size = len(self.genes)-1 # Removing initial city
         return
 
     def calc_fitness(self, chromossome):
@@ -13,7 +13,7 @@ class GeneticAlgoritm:
             fit += self.distances[chromossome[i-1]][chromossome[i]]
         fit += self.distances['R'][chromossome[0]] + self.distances['R'][chromossome[len(chromossome)-1]]
         
-        return 1/fit
+        return fit
 
     def crossover(self, father1, father2, step=1):
         child1 = [0 for i in range(self.chromossome_size)]
@@ -43,34 +43,55 @@ class GeneticAlgoritm:
     def stop_if(self):
         pass
 
-    def search_min_way(self, population_size, generations):
+    def search_min_way(self, population_size, generations, d=False):
         genes = list(self.distances.keys())
         genes.remove('R')
         population = []
         best_chro = [0, []]
 
         # Initial population
-        for i in range(population_size):
+        while len(population) != population_size:
             chromossome = random.sample(genes, len(genes))
-            population.append(chromossome)
-        print(population)
+            if chromossome not in population:
+                population.append(chromossome)
         
         for g in range(generations):
+            # print('generation', g)
 
-            fitness = []
+            # Calculating fitness
+            fitness = {}
+            best_fit = float('inf')
+            best_chro = []
             for chro in population:
                 fit = self.calc_fitness(chro)
-                fitness.append([fit, chro])
-            best_chro = max(fitness, key=lambda x: x[0])
-            
+                if fit < best_fit:
+                    best_fit = fit
+                    best_chro = chro
+                    fitness[''.join(chro)] = fit
+
+            # print(f'{fitness=}\n{best_chro}')
+
             # TODO: self.stop_if()
-
+            
+            # Crossover
+            population_set = list(range(population_size)) 
             for p in range(int(population_size/2)):
-                population_set = list(range(population_size))
-                population_set.remove(random.choice(population_set))
-                print(population_set)
+                f1 = random.choice(population_set)
+                population_set.remove(f1)
+                f2 = random.choice(population_set)
+                population_set.remove(f2)
+                
+                father1 = population[f1]
+                father2 = population[f2]
+                child1, child2 = self.crossover(father1, father2)                
+                population[f1] = child1
+                population[f2] = child2
 
-                # child1, child2 = self.crossover(population[0], population[1])                
+            #     print(f'{father1=} {child1=}\n{father2=} {child2=}\n')
+    
+            # print(f"best chromossome={best_chro}\ncost={1/best_chro[0]}")
+        
+        best_chro = ['R'] + best_chro + ['R'] 
 
-        return 
+        return best_chro, best_fit
 

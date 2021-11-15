@@ -6,31 +6,43 @@ from utils import Utils
 def forca_bruta(distancias):
     bf = BF(distancias)
     
-    short_path, short_cost = bf.shortest_path()
-    print(short_path, short_cost)
+    menor_caminho, menor_custo = bf.shortest_path()
+    print(menor_caminho, menor_custo)
 
     return
 
 def algoritmo_genetico(distances, quant_populacao, geracoes):
     ag = GA(distances)
-    ag.search_min_way(quant_populacao, geracoes)
+    menor_caminho, menor_custo = ag.search_min_way(quant_populacao, geracoes)
+    print(menor_caminho, menor_custo)
     
+    return
 
-def sum(a,b):
-    return a+b
+def comparar_custo(cfb,cag):
+    print(f'\n\n{cfb=}\n{cag=}')
+    if cfb < cag:
+        print(f'forca bruta foi mais rapido por {cag-cfb}')
+    else:
+        print(f'algoritmo genetico foi mais rapido por {cfb-cag}')
+
+    return
 
 def main():
     grafo = open("input.txt", "r")
 
     distancias = Utils.get_distances(grafo)    
 
-    # start = timeit.default_timer()
-    # forca_bruta(distancias)
-    # print('custo forca bruta: ', timeit.default_timer() - start)
-
     start = timeit.default_timer()
-    algoritmo_genetico(distancias, 4, 1)
-    print('custo algoritmo genetico: ', timeit.default_timer() - start)
+    # forca_bruta(distancias)
+    custo_forca_bruta = timeit.default_timer() - start
+
+    tamanho_populacao = 100
+    geracoes = 1000
+    start = timeit.default_timer()
+    algoritmo_genetico(distancias, tamanho_populacao, geracoes)
+    custo_algoritmo_genetico = timeit.default_timer() - start
+
+    comparar_custo(custo_forca_bruta, custo_algoritmo_genetico)
 
     grafo.close()
 
