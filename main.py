@@ -11,9 +11,9 @@ def forca_bruta(distancias):
 
     return
 
-def algoritmo_genetico(distances, quant_populacao, geracoes):
+def algoritmo_genetico(distances, quant_populacao, geracoes, prob_mutacao):
     ag = GA(distances)
-    menor_caminho, menor_custo = ag.search_min_way(quant_populacao, geracoes)
+    menor_caminho, menor_custo = ag.search_min_way(quant_populacao, geracoes, prob_mutacao)
     print(menor_caminho, menor_custo)
     
     return
@@ -36,10 +36,11 @@ def main():
     # forca_bruta(distancias)
     custo_forca_bruta = timeit.default_timer() - start
 
-    tamanho_populacao = 100
-    geracoes = 1000
+    tamanho_populacao = 10
+    geracoes = 1
+    probabilidade_mutacao = 0.1
     start = timeit.default_timer()
-    algoritmo_genetico(distancias, tamanho_populacao, geracoes)
+    algoritmo_genetico(distancias, tamanho_populacao, geracoes, probabilidade_mutacao)
     custo_algoritmo_genetico = timeit.default_timer() - start
 
     comparar_custo(custo_forca_bruta, custo_algoritmo_genetico)

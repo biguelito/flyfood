@@ -40,10 +40,29 @@ class GeneticAlgoritm:
 
         return child1, child2
 
+    def mutation(self, chromossome):
+        p1 = random.randrange(0,self.chromossome_size-1)
+        p2 = random.randrange(p1,self.chromossome_size)
+
+        mut = chromossome[p1:p2]
+        mut.reverse()
+        muted_chromossome = chromossome[:p1] + mut + chromossome[p2:]
+
+        return muted_chromossome
+
     def stop_if(self):
         pass
 
-    def search_min_way(self, population_size, generations, d=False):
+    def adjust_fitness(self, fitness):
+        t = 0
+        r = []
+        for f in fitness:
+            t += f
+            r.append(t)
+
+        return r
+
+    def search_min_way(self, population_size, generations, mutation_p, d=False):
         genes = list(self.distances.keys())
         genes.remove('R')
         population = []
@@ -56,41 +75,65 @@ class GeneticAlgoritm:
                 population.append(chromossome)
         
         for g in range(generations):
+            new_population = []
             # print('generation', g)
 
             # Calculating fitness
-            fitness = {}
+            fitness = []
             best_fit = float('inf')
             best_chro = []
             for chro in population:
                 fit = self.calc_fitness(chro)
+                fitness.append(fit)
                 if fit < best_fit:
                     best_fit = fit
                     best_chro = chro
-                    fitness[''.join(chro)] = fit
 
             # print(f'{fitness=}\n{best_chro}')
 
-            # TODO: self.stop_if()
-            
             # Crossover
-            population_set = list(range(population_size)) 
             for p in range(int(population_size/2)):
-                f1 = random.choice(population_set)
-                population_set.remove(f1)
-                f2 = random.choice(population_set)
-                population_set.remove(f2)
+                population_set = list(range(len(population))) 
+                # f1 = random.choice(population_set)
+                # population_set.remove(f1)
+                # f2 = random.choice(population_set)
+                # population_set.remove(f2)
+
+                # father1 = population[f1]
+                # father2 = population[f2]
+                # child1, child2 = self.crossover(father1, father2)                
+                # population[f1] = child1
+                # population[f2] = child2
+
+                index_father1 = random.choices(population_set, weights=fitness, k=1)[0]
+                population_set.remove(index_father1)
+                fitness.pop(index_father1)
+
+                index_father2 = random.choices(population_set, weights=fitness, k=1)[0]
+                population_set.remove(index_father2)
+                fitness.pop(index_father2)
+
+                print(index_father1, index_father2, population_set)
                 
-                father1 = population[f1]
-                father2 = population[f2]
-                child1, child2 = self.crossover(father1, father2)                
-                population[f1] = child1
-                population[f2] = child2
+                father1 = population.pop(index_father1)
+                father2 = population.pop(index_father2)
+                
+                
+                
+                child1, child2 = self.crossover(father1, father2)
+                new_population.append(child1)
+                new_population.append(child2)
+                
+
+                # TODO: aplicar mutacao e desenvolver selecao
 
             #     print(f'{father1=} {child1=}\n{father2=} {child2=}\n')
     
             # print(f"best chromossome={best_chro}\ncost={1/best_chro[0]}")
         
+            population = new_population[:]
+
+        # TODO: implementar elitismo
         best_chro = ['R'] + best_chro + ['R'] 
 
         return best_chro, best_fit
