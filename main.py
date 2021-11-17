@@ -33,11 +33,11 @@ def main():
     distancias = Utils.get_distances(grafo)    
 
     start = timeit.default_timer()
-    # forca_bruta(distancias)
+    forca_bruta(distancias)
     custo_forca_bruta = timeit.default_timer() - start
 
-    tamanho_populacao = 10
-    geracoes = 1
+    tamanho_populacao = 50
+    geracoes = 100
     probabilidade_mutacao = 0.1
     start = timeit.default_timer()
     algoritmo_genetico(distancias, tamanho_populacao, geracoes, probabilidade_mutacao)
