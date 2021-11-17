@@ -115,6 +115,12 @@ class GeneticAlgoritm:
                 weight.remove(fit1)
                 weight.remove(fit2)
 
+                if random.random() < mutation_p:
+                    self.mutation(child1)
+
+                if random.random() < mutation_p:
+                    self.mutation(child2)
+
                 # TODO: aplicar mutacao
 
             #     print(f'{father1=} {child1=}\n{father2=} {child2=}\n')
