@@ -52,10 +52,7 @@ class GeneticAlgoritm:
         muted_chromossome = chromossome[:p1] + mut + chromossome[p2:]
 
         return muted_chromossome
-
-    def stop_if(self):
-        pass
-
+        
     def elitism(self, population, fitness):
         worst_fit = max(fitness)
         worst_index = fitness.index(worst_fit)
@@ -78,7 +75,6 @@ class GeneticAlgoritm:
                 population.append(chromossome)
 
         for g in range(generations):
-            # print('generation', g)
 
             # Calculating fitness
             new_population = []
@@ -89,8 +85,6 @@ class GeneticAlgoritm:
                 if fit < self.best_fit:
                     self.best_fit = fit
                     self.best_chro = chro
-
-            # print(f'{fitness=}\n{best_chro}')
 
             # Crossover
             weight = fitness[:]
@@ -115,18 +109,12 @@ class GeneticAlgoritm:
                 weight.remove(fit1)
                 weight.remove(fit2)
 
+                # mutation
                 if random.random() < mutation_p:
                     self.mutation(child1)
-
                 if random.random() < mutation_p:
                     self.mutation(child2)
 
-                # TODO: aplicar mutacao
-
-            #     print(f'{father1=} {child1=}\n{father2=} {child2=}\n')
-    
-            # print(f"best chromossome={best_chro}\ncost={1/best_chro[0]}")
-            
             population = self.elitism(new_population, fitness)
 
         self.best_chro = ['R'] + self.best_chro + ['R'] 
