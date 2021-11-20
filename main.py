@@ -22,12 +22,12 @@ def testar(grafo, tamanho_populacao, geracoes, probabilidade_mutacao):
     distancias = Utils.get_distances(grafo)    
 
     start = timeit.default_timer()
-    forca_bruta(distancias)
-    custo_forca_bruta = timeit.default_timer() - start
-
-    start = timeit.default_timer()
     algoritmo_genetico(distancias, tamanho_populacao, geracoes, probabilidade_mutacao)
     custo_algoritmo_genetico = timeit.default_timer() - start
+
+    start = timeit.default_timer()
+    forca_bruta(distancias)
+    custo_forca_bruta = timeit.default_timer() - start
 
     print(f'{custo_forca_bruta=}\n{custo_algoritmo_genetico=}')
     if custo_forca_bruta < custo_algoritmo_genetico:
@@ -60,6 +60,15 @@ def main():
     probabilidade_mutacao = 0.05
     testar(grafo, tamanho_populacao, geracoes, probabilidade_mutacao)
     grafo.close()
+
+    # grafo = open("input10x10-13.txt", "r")
+    # print('testando com grafo 10x10 com 13 cidades')
+    # tamanho_populacao = 80
+    # geracoes = 350
+    # probabilidade_mutacao = 0.05
+    # testar(grafo, tamanho_populacao, geracoes, probabilidade_mutacao)
+    # grafo.close()
+
 
 if __name__ == "__main__":
     main()
