@@ -73,7 +73,7 @@ class GeneticAlgoritm:
 
         return muted_chromossome
         
-    def elitism(self, population, fitness):
+    def elitism(self, population):
         """
         Metodo que realiza o elitismo
         Procura na populacao o pior chromossomo e substitui ele pelo
@@ -81,10 +81,13 @@ class GeneticAlgoritm:
         Recebe as listas de populacao e fitness
         Retorna uma populacao 
         """
-        worst_fit = max(fitness)
-        worst_index = fitness.index(worst_fit)
-
-        fitness[worst_index] = self.best_fit
+        worst_fit = -1
+        for i, chro in enumerate(population):
+            fit = self.calc_fitness(chro)
+            if fit > worst_fit:
+                worst_fit = fit 
+                worst_index = i
+        
         population[worst_index] = self.best_chro
 
         return population
@@ -157,7 +160,7 @@ class GeneticAlgoritm:
                 new_population.append(child1)
                 new_population.append(child2)
 
-            population = self.elitism(new_population, fitness)
+            population = self.elitism(new_population)
 
         self.best_chro = ['R'] + self.best_chro + ['R'] 
 
