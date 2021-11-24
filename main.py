@@ -7,7 +7,6 @@ def testar_forca_bruta(distancias):
     start = timeit.default_timer()
     bf = BF(distancias)
     m_caminho, m_custo = bf.shortest_path()
-    print('forca bruta: ', m_caminho, m_custo)
     custo_forca_bruta = timeit.default_timer() - start
     
     return custo_forca_bruta, m_custo, m_caminho
@@ -16,7 +15,6 @@ def testar_algoritmo_genetico(distancias, quant_populacao, geracoes, prob_mutaca
     start = timeit.default_timer()
     ag = GA(distancias)
     m_caminho, m_custo = ag.search_min_way(quant_populacao, geracoes, prob_mutacao)
-    print('algoritmo genetico: ', m_caminho, m_custo)
     custo_algoritmo_genetico = timeit.default_timer() - start
     
     return custo_algoritmo_genetico, m_custo, m_caminho
@@ -69,30 +67,46 @@ def testar_grafos():
 
     return
 
-def roda_de_teste(n, grafo, tamanho_populacao, geracoes, probabilidade_mutacao):
+def roda_de_teste(testes_totais, testes_por_valores, grafo, tamanho_populacao, geracoes, probabilidade_mutacao, cres_populacao, cres_geracao):
     distancias = Utils.get_distances(grafo) 
     
-    custo_fb, m_custo_fb, m_caminho_fb = testar_forca_bruta(distancias)
-    cfb = (custo_fb, m_custo_fb)
+    total_cag = {}
+    for i in range(testes_totais):
+        cag = []
+        for j in range(testes_por_valores):
+            custo_ag, m_custo_ag, m_caminho_ag = testar_algoritmo_genetico(distancias, tamanho_populacao, geracoes, probabilidade_mutacao)
+            cag.append((custo_ag, m_custo_ag, m_caminho_ag))
+        
+        total_cag[(tamanho_populacao, geracoes)] = cag
+        tamanho_populacao += cres_populacao
+        geracoes += cres_geracao
+    
+    # custo_fb, m_custo_fb, m_caminho_fb = testar_forca_bruta(distancias)
+    # cfb = (custo_fb, m_custo_fb, m_caminho_fb)
+    # return cfb, total_cag
 
-    cag = []
-    for i in range(n):
-        custo_ag, m_custo_ag, m_caminho_ag = testar_algoritmo_genetico(distancias, tamanho_populacao, geracoes, probabilidade_mutacao)
-        cag.append((custo_ag, m_custo_ag))
-
-    return cfb, cag
+    return [0, 0,['a']], total_cag
 
 def main():
-    grafo = open("input.txt", "r")
-    print('testando com o grafo original')
-    tamanho_populacao = 4
-    geracoes = 7
+    grafo = open("input10x10-11.txt", "r")
+    testes_totais = 5
+    testes_por_valores = 10
+    tamanho_populacao = 60
+    geracoes = 270
     probabilidade_mutacao = 0.05
-    custo_forca_bruta, custos_algoritmo_genetico = roda_de_teste(1, grafo, tamanho_populacao, geracoes, probabilidade_mutacao)
+    cres_populacao = 6
+    cres_geracao = 20
+    custo_forca_bruta, custos_algoritmo_genetico = roda_de_teste(testes_totais, testes_por_valores, grafo, tamanho_populacao, geracoes, probabilidade_mutacao, cres_populacao, cres_geracao)
+        
     grafo.close()
 
-    print(custo_forca_bruta)
-    print(custos_algoritmo_genetico)
-    
+    print(f'Forca Bruta encontrou o caminho: {"-".join(custo_forca_bruta[2])} de peso {custo_forca_bruta[1]} em {custo_forca_bruta[0]}\n')
+    print('Algoritmo genetico encontrou os caminhos:')
+
+    for k,v in custos_algoritmo_genetico.items():
+        for r in v:
+            print(k, ':', r)
+        print('')
+
 if __name__ == "__main__":
     main()
