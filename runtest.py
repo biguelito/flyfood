@@ -27,18 +27,6 @@ class RunTest:
         
         return custo_algoritmo_genetico, m_custo, m_caminho
 
-    # def testar(self, tamanho_populacao, geracoes, probabilidade_mutacao):   
-    #     custo_fb, m_custo_fb, m_caminho_fb = self.testar_forca_bruta()
-    #     custo_ag, m_custo_ag, m_caminho_ag = self.testar_algoritmo_genetico(tamanho_populacao, geracoes, probabilidade_mutacao)
-        
-    #     print(f'{custo_fb=}\n{custo_ag=}')
-    #     if custo_fb < custo_ag:
-    #         print(f'forca bruta foi mais rapido por {custo_ag-custo_fb}\n')
-    #     else:
-    #         print(f'algoritmo genetico foi mais rapido por {custo_fb-custo_ag}\n')
-        
-    #     return custo_ag, custo_ag
-
     def roda_de_teste(self, testes_totais, testes_por_valores, tamanho_populacao, geracoes, probabilidade_mutacao, cres_populacao, cres_geracao):
         
         total_cag = {}
