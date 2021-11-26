@@ -1,7 +1,7 @@
 from runtest import RunTest 
 
 def main():
-    grafo_input = open('input.txt', 'r')
+    grafo_input = open('input10x10-11.txt', 'r')
     grafo = RunTest(grafo_input)
     grafo_input.close()
 

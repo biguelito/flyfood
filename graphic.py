@@ -22,8 +22,8 @@ class Graphic:
             menor_custo = min(v, key=lambda x: x[1])[1]
             self.data_ag_resume['melhor custo'].append(menor_custo)
             
-            ocorrencia_menor = sum(1 for a, custo, b in v if custo == menor_custo)
-            self.data_ag_resume['prob. menor custo'].append(ocorrencia_menor/len(v))
+            ocorrencia_menor = sum(1 for a, custo, b in v if custo == self.fb[1])
+            self.data_ag_resume['prob. menor custo'].append((ocorrencia_menor/len(v))*100)
             
             self.data_ag_resume['media de tempo'].append(sum(tempo for tempo, a, b in v)/len(v))
             
@@ -36,6 +36,7 @@ class Graphic:
         
         self.treat_data_resume()
         df = pd.DataFrame(self.data_ag_resume, index=self.indexes)
+        print('Algoritmo Genetico:')
         print(df)
 
         return
