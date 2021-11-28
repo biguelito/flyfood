@@ -8,59 +8,46 @@ class RunTest:
     
     def __init__(self, grafo) -> None:
         self.distancias = Utils.get_distances(grafo) 
-
+        self.total_cga = {}
+        self.total_cbf = []
+        self.graphic = Graphic()
         return
 
-    def testar_forca_bruta(self):
+    def brute_force(self):
         start = timeit.default_timer()
         bf = BF(self.distancias)
         m_caminho, m_custo = bf.shortest_path()
         custo_forca_bruta = timeit.default_timer() - start
         
-        return custo_forca_bruta, m_custo, m_caminho
+        self.total_cbf = [custo_forca_bruta, m_custo, m_caminho]
+        return 
 
-    def testar_algoritmo_genetico(self, quant_populacao, geracoes, prob_mutacao):
+    def test_genetic_algoritm(self, quant_populacao, geracoes, prob_mutacao):
         start = timeit.default_timer()
-        ag = GA(self.distancias)
-        m_caminho, m_custo = ag.search_min_way(quant_populacao, geracoes, prob_mutacao)
+        ga = GA(self.distancias)
+        m_caminho, m_custo = ga.search_min_way(quant_populacao, geracoes, prob_mutacao)
         custo_algoritmo_genetico = timeit.default_timer() - start
         
         return custo_algoritmo_genetico, m_custo, m_caminho
 
-    def roda_de_teste(self, testes_totais, testes_por_valores, tamanho_populacao, geracoes, probabilidade_mutacao, cres_populacao, cres_geracao):
+    def genetic_algoritm(self, testes_totais, testes_por_valores, tamanho_populacao, geracoes, probabilidade_mutacao, cres_populacao, cres_geracao):
         
-        total_cag = {}
+        total_cga = {}
         for i in range(testes_totais):
-            cag = []
+            cga = []
             for j in range(testes_por_valores):
-                custo_ag, m_custo_ag, m_caminho_ag = self.testar_algoritmo_genetico(tamanho_populacao, geracoes, probabilidade_mutacao)
-                cag.append((custo_ag, m_custo_ag, m_caminho_ag))
+                custo_ga, m_custo_ga, m_caminho_ga = self.test_genetic_algoritm(tamanho_populacao, geracoes, probabilidade_mutacao)
+                cga.append((custo_ga, m_custo_ga, m_caminho_ga))
             
-            total_cag[(tamanho_populacao, geracoes)] = cag
+            total_cga[(tamanho_populacao, geracoes)] = cga
             tamanho_populacao += cres_populacao
             geracoes += cres_geracao
         
-        custo_fb, m_custo_fb, m_caminho_fb = self.testar_forca_bruta()
-        cfb = (custo_fb, m_custo_fb, m_caminho_fb)
-        return cfb, total_cag
+        self.total_cga = total_cga
+        return 
 
-        return [0, 0,['a']], total_cag
+    def resume_brute_force(self):
+        self.graphic.show_brute_force(self.total_cbf)
 
-    def run(self, 
-            testes_totais, 
-            testes_por_valores, 
-            tamanho_populacao, 
-            geracoes, 
-            probabilidade_mutacao,
-            cres_populacao, 
-            cres_geracao
-        ):
-        
-        self.custo_forca_bruta, self.custos_algoritmo_genetico = self.roda_de_teste(testes_totais, testes_por_valores, tamanho_populacao, geracoes, probabilidade_mutacao, cres_populacao, cres_geracao)
-            
-        self.graphic = Graphic(self.custos_algoritmo_genetico, self.custo_forca_bruta)
-
-        return
-
-    def resume(self):
-        self.graphic.show_resume()
+    def resume_genetic_algoritm(self):
+        self.graphic.show_genetic_algoritm(self.total_cga)
